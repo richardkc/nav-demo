@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+    <head>
+        <meta charset="utf-8">
+        <title>我的导航</title>
+        <link rel="stylesheet" href="./style.css">
+    </head>
+    <body>
+        <header></header>
+        <main>
+            <div class="wrapper" id="main"></div>
+        </main>
+        <footer></footer>
+        <script>
+            //初始化数据
+        var hash1 = init()
+        var keys = hash1['keys']
+        var hash=hash1['hash']
+
+        //生成键盘
+        generateKeyboard(keys,hash)
+
+        //监听用户动作
+        listenToUser(hash)
+
+        //工具函数
+        function getInlocalStorage(x){
+            return JSON.parse(localStorage.getItem(x) || 'null')
+        }
+        function tag(tagName,attributes){
+            var element = document.createElement(tagName)
+            for(var key in attributes){
+                element[key] = attributes[key]
+            }
+            return element
+        }
+
+        function createButton(id1){
+            var button= tag('button',{textContent:'编辑',id:id1})
+            button.onclick=function(aaaaa){
+                var button2=aaaaa.target
+                var img2=button2.previousSibling
+                var key=button2.id
+                var input1=prompt('请输入一个网址')
+                hash[key]=input1
+                img2.src = 'http://'+input1+'/favicon.ico'
+                img2.onerror = function(xxx){
+                   xxx.target.src = '//i.loli.net/2019/05/20/5ce2c3f97863981385.png'
+                }
+                localStorage.setItem('hahaha',JSON.stringify(hash))
+            }
+            return button
+        }
+        function createImg(domain){
+            var img=tag('img')
+            if(domain){
+                img.src = 'http://'+domain+'/favicon.ico'
+            }
+            else{
+                img.src = '//i.loli.net/2019/05/20/5ce2c3f97863981385.png'
+            }
+            img.onerror = function(xxx){
+                xxx.target.src = '//i.loli.net/2019/05/20/5ce2c3f97863981385.png'
+            }
+            return img
+        }
+        function init(){
+            var keys={
+                '0':{0:'q',1:'w',2:'e',3:'r',4:'t',5:'y',6:'u',7:'i',8:'o',9:'p',length:10},
+                '1':{0:'a',1:'s',2:'d',3:'f',4:'g',5:'h',6:'j',7:'k',8:'l',length:9},
+                '2':{0:'z',1:'x',2:'c',3:'v',4:'b',5:'n',6:'m',length:7},
+                'length':3
+            }
+            var hash = {'q':'qq.com','w':'weibo.com','e':'ele.me','r':'renren.com','m':'www.mcdonalds.com.cn'
+            }
+            var hashInLocalStorage=getInlocalStorage('hahaha')
+            if(hashInLocalStorage){
+                hash=hashInLocalStorage
+            }
+            return{
+                'keys':keys,
+                'hash':hash
+            }
+        }
+        function generateKeyboard(keys,hash){
+            for(var count1=0;count1<keys['length'];count1++){
+                var div=tag('div',{className:'row'})
+    
+    
+                main.appendChild(div)
+    
+                var row=keys[count1]
+    
+                for(var count2=0;count2<row['length'];count2++){
+                    
+                    var span= tag('span',{className:'text',textContent:row[count2]})
+                    var button= createButton(row[count2])
+                    var img= createImg(hash[row[count2]])
+                    var kbd= tag('kbd',{className:'key'})
+    
+                    kbd.appendChild(span)
+                    kbd.appendChild(img)
+                    kbd.appendChild(button)
+                    div.appendChild(kbd)
+    
+                }
+    
+            }
+        }
+        function listenToUser(hash){
+            document.onkeypress=function(aaaaa){
+                var key=aaaaa['key']
+                var website=hash[key]
+                /*location.href='http://'+website*/
+                window.open('http://'+website, '_blank')
+            }
+        }
+        </script>
+    </body>
+</html>
